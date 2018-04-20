@@ -229,8 +229,8 @@
             </p>
         </div>
         <br />
-        <div id="section5">
-            <h2 class="title">セクション5：Promise.all, Promise.raceを用いた並列処理</h2>
+        <div id="section6">
+            <h2 class="title">セクション6：Promise.all, Promise.raceを用いた並列処理</h2>
             <p>
                 ここまでは、非同期処理が終わるのを「待ってから」次の処理を実行する、いわゆる逐次処理を記述してきました。<br />
                 しかし、場合によってはいくつかの非同期処理を同時並行して処理させたい場合があると思います。きっと。<br />
@@ -258,17 +258,17 @@
             <p>
                 以下では、シンプルな例を通して、Promise.all, Promise.raceを感じてみましょう！
             </p>
-            <div id="section5-code1" class="js-code">
-                <span class="box-title">セクション5のコード1~Promise.all~</span>
+            <div id="section6-code1" class="js-code">
+                <span class="box-title">セクション6のコード1~Promise.all~</span>
                 <pre>
-                    var $result5_1 = $('#result-section5-code1');
-                    $result5_1.children('p').remove();
-                    $result5_1.append($('&lt;p&gt;').html('START!'));
+                    var $result6_1 = $('#result-section6-code1');
+                    $result6_1.children('p').remove();
+                    $result6_1.append($('&lt;p&gt;').html('START!'));
                     
                     //1つ目のPromiseオブジェクト
                     var promise1 = new Promise(function(resolve, reject){
                         setTimeout(function(){
-                            $result5_1.append($('&lt;p&gt;').html('promise1: waiting 2 sec'));
+                            $result6_1.append($('&lt;p&gt;').html('promise1: waiting 2 sec'));
                             resolve('promise1');
                         }, 2000);
                     });
@@ -276,7 +276,7 @@
                     //2つ目のPromiseオブジェクト
                     var promise2 = new Promise(function(resolve, reject){
                         setTimeout(function(){
-                            $result5_1.append($('&lt;p&gt;').html('promise2: waiting 4 sec'));
+                            $result6_1.append($('&lt;p&gt;').html('promise2: waiting 4 sec'));
                             resolve('promise2');
                         }, 4000);
                     });
@@ -284,66 +284,66 @@
                     //3つ目のPromiseオブジェクト
                     var promise3 = new Promise(function(resolve, reject){
                         setTimeout(function(){
-                            $result5_1.append($('&lt;p&gt;').html('promise3: waiting 6 sec'));
+                            $result6_1.append($('&lt;p&gt;').html('promise3: waiting 6 sec'));
                             resolve('promise3');
                         }, 6000);
                     });
                 
                     //Promise.allで並列処理！
                     Promise.all([promise1, promise2, promise3]).then(function(resp){
-                        $result5_1.append($('&lt;p&gt;').html('"All" promise were finished just now!'));
-                        $result5_1.append($('&lt;p&gt;').html('and responce is this: '));
-                        $result5_1.append($('&lt;p&gt;').html('-------------'));
+                        $result6_1.append($('&lt;p&gt;').html('"All" promise were finished just now!'));
+                        $result6_1.append($('&lt;p&gt;').html('and responce is this: '));
+                        $result6_1.append($('&lt;p&gt;').html('-------------'));
                         for(var el of resp){
-                            $result5_1.append($('&lt;p&gt;').html(el));
+                            $result6_1.append($('&lt;p&gt;').html(el));
                         }
-                        $result5_1.append($('&lt;p&gt;').html('-------------'));
+                        $result6_1.append($('&lt;p&gt;').html('-------------'));
                     });
                 </pre>
             </div>
-            <button type="button" class="btn btn-primary" id="do-section5-code1-button">セクション5のコード1実行！</button>
-            <div id="result-section5-code1" class="do-box">
-                <span class="box-title">セクション5のコード1実行結果</span>
+            <button type="button" class="btn btn-primary" id="do-section6-code1-button">セクション6のコード1実行！</button>
+            <div id="result-section6-code1" class="do-box">
+                <span class="box-title">セクション6のコード1実行結果</span>
             </div>
             <br />
-            <div id="section5-code2" class="js-code">
-                <span class="box-title">セクション5のコード2~Promise.race~</span>
+            <div id="section6-code2" class="js-code">
+                <span class="box-title">セクション6のコード2~Promise.race~</span>
                 <pre>
                     //promise1, promise2, promise3の定義は、コード1と全く同じにしてあります。
                     //Promise.raceで並列処理！
                     Promise.race([promise1, promise2, promise3]).then(function(resp){
-                        $result5_2.append($('&lt;p&gt;').html('"One" promise was finished just now!'));
-                        $result5_2.append($('&lt;p&gt;').html('and responce is this: '));
-                        $result5_2.append($('&lt;p&gt;').html('-------------'));
+                        $result6_2.append($('&lt;p&gt;').html('"One" promise was finished just now!'));
+                        $result6_2.append($('&lt;p&gt;').html('and responce is this: '));
+                        $result6_2.append($('&lt;p&gt;').html('-------------'));
                         for(var el of resp){
-                            $result5_2.append($('&lt;p&gt;').html(el));
+                            $result6_2.append($('&lt;p&gt;').html(el));
                         }
-                        $result5_2.append($('&lt;p&gt;').html('-------------'));
+                        $result6_2.append($('&lt;p&gt;').html('-------------'));
                     });
                 </pre>
             </div>
-            <button type="button" class="btn btn-primary" id="do-section5-code2-button">セクション5のコード2実行！</button>
-            <div id="result-section5-code2" class="do-box">
-                <span class="box-title">セクション5のコード2実行結果</span>
+            <button type="button" class="btn btn-primary" id="do-section6-code2-button">セクション6のコード2実行！</button>
+            <div id="result-section6-code2" class="do-box">
+                <span class="box-title">セクション6のコード2実行結果</span>
             </div>
         </div>
         <br />
-        <div id="section6">
-            <h2 class="title">セクション6（応用）：再帰呼び出し</h2>
+        <div id="section7">
+            <h2 class="title">セクション7（応用）：再帰呼び出し</h2>
             <p>
                 再帰呼び出しを絡めた非同期処理を例にして、少し応用的なことを考えてみたいと思います。<br />
                 そもそもなぜこのセクションを入れたのかというと、僕がここ最近取り組んでいたkintoneプラグイン開発で詰まってしまったのがこのあたりだったからです。
             </p>
-            <div id="section6-code1" class="js-code">
-                <span class="box-title">セクション6のコード1</span>
+            <div id="section7-code1" class="js-code">
+                <span class="box-title">セクション7のコード1</span>
                 <pre>
                     //再帰呼び出し用の関数。合計で2回だけ呼び出すようにしてます。
                     function recursiveFunction(count){
-                        var $result6_1 = $('#result-section6-code1');
+                        var $result7_1 = $('#result-section7-code1');
                         count = count || 0;
                         return new Promise(function(resolve, reject){
                             setTimeout(function(){
-                                $result6_1.append($('&lt;p&gt;').html('Now count is ' + count));
+                                $result7_1.append($('&lt;p&gt;').html('Now count is ' + count));
                     
                                 //ここが注意すべきポイント。ここのresolveは期待した動作をしない。
                                 if(count >= 1){
@@ -357,37 +357,37 @@
                     }
                     
                     // 再帰呼び出し。できるだシンプルなコードで。
-                    $('#do-section6-code1-button').click(function(){
-                        var $result6_1 = $('#result-section6-code1');
-                        $result6_1.children('p').remove();
-                        $result6_1.append($('&lt;p&gt;').html('START!'));
+                    $('#do-section7-code1-button').click(function(){
+                        var $result7_1 = $('#result-section7-code1');
+                        $result7_1.children('p').remove();
+                        $result7_1.append($('&lt;p&gt;').html('START!'));
                         recursiveFunction().then(function(message){
                             //messageには、「complete!」という文字列が渡されることを期待している。しかしおそらくうまく動かない。
-                            $result6_1.append($('&lt;p&gt;').html('The responce is "' + message + '".'));
+                            $result7_1.append($('&lt;p&gt;').html('The responce is "' + message + '".'));
                         });
                     });
                 </pre>
             </div>
-            <button type="button" class="btn btn-primary" id="do-section6-code1-button">セクション6のコード1実行！</button>
-            <div id="result-section6-code1" class="do-box">
-                <span class="box-title">セクション6のコード1実行結果</span>
+            <button type="button" class="btn btn-primary" id="do-section7-code1-button">セクション7のコード1実行！</button>
+            <div id="result-section7-code1" class="do-box">
+                <span class="box-title">セクション7のコード1実行結果</span>
             </div>
             <br />
             <p>
                 このように、上記のような記述では、うまく再帰呼び出しを絡めたPromiseを使うことはできません。<br/ >
                 では、どのように記述すれば解決できるでしょうか？考えてみてください♪（ここまでの知識で解決できます）
             </p>
-            <button type="button" class="btn btn-warning" id="open-section6-code2">セクション6のコード2を見る！</button>
-            <div id="section6-code2" class="js-code">
-                <span class="box-title">セクション6のコード2</span>
-                <pre id="answer6-2" class="answer">
+            <button type="button" class="btn btn-warning" id="open-section7-code2">セクション7のコード2を見る！</button>
+            <div id="section7-code2" class="js-code">
+                <span class="box-title">セクション7のコード2</span>
+                <pre id="answer7-2" class="answer">
                     //修正した再帰呼び出しの関数を定義
                     function recursiveFunctionNeo(count){
-                        var $result6_2 = $('#result-section6-code2');
+                        var $result7_2 = $('#result-section7-code2');
                         count = count || 0;
                         return new Promise(function(resolve, reject){
                             setTimeout(function(){
-                                $result6_2.append($('&lt;p&gt;').html('Now count is ' + count));
+                                $result7_2.append($('&lt;p&gt;').html('Now count is ' + count));
                                 resolve(count);
                             }, 2000);    
                         })
@@ -402,20 +402,20 @@
                     }
                     
                     // 再帰呼び出し。こんどこそ上手くいくコードにしましょう！
-                    $('#do-section6-code2-button').click(function(){
-                        var $result6_2 = $('#result-section6-code2');
-                        $result6_2.children('p').remove();
-                        $result6_2.append($('&lt;p&gt;').html('START!'));
+                    $('#do-section7-code2-button').click(function(){
+                        var $result7_2 = $('#result-section7-code2');
+                        $result7_2.children('p').remove();
+                        $result7_2.append($('&lt;p&gt;').html('START!'));
                         recursiveFunctionNeo().then(function(message){
                             //messageには、「complete!」という文字列が渡されることを期待している。       
-                            $result6_2.append($('&lt;p&gt;').html('The responce is "' + message + '".'));
+                            $result7_2.append($('&lt;p&gt;').html('The responce is "' + message + '".'));
                         });
                     });
                 </pre>
             </div>
-            <button type="button" class="btn btn-primary" id="do-section6-code2-button">セクション6のコード2実行！</button>
-            <div id="result-section6-code2" class="do-box">
-                <span class="box-title">セクション6のコード2実行結果</span>
+            <button type="button" class="btn btn-primary" id="do-section7-code2-button">セクション7のコード2実行！</button>
+            <div id="result-section7-code2" class="do-box">
+                <span class="box-title">セクション7のコード2実行結果</span>
             </div>
             <br />
             <p>
@@ -445,7 +445,7 @@
                     このことが上手く利用されているコードに、kintone.apiリクエストのレコード数やアプリ数の上限を突破するよう工夫された関数たちです。<br />
                     （ここにコード貼り付けておこう）
                 </p>
-                <div id="section6-code3" class="js-code">
+                <div id="section7-code3" class="js-code">
                     <span class="box-title">kintone.apiを利用した再帰呼び出しの具体例</span>
                     <pre>
                         //レコードを取得する関数

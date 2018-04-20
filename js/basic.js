@@ -197,22 +197,28 @@ function secondPromiseFunction(message1){
 
 /////////////////////////////////////////////////////////////////////////
 
+//セクション５：Promiseオブジェクトの状態
 
-//セクション5：Promise.all, Promise.raceを使った並列処理
+//これから書いていきます（２０１８年４月２０日現在の抱負）
+
+/////////////////////////////////////////////////////////////////////////
+
+
+//セクション6：Promise.all, Promise.raceを使った並列処理
 
 
 //code1: Promise.allについての基本
 
-$('#do-section5-code1-button').click(function(){
+$('#do-section6-code1-button').click(function(){
 
-    var $result5_1 = $('#result-section5-code1');
-    $result5_1.children('p').remove();
-    $result5_1.append($('<p>').html('START!'));
+    var $result6_1 = $('#result-section6-code1');
+    $result6_1.children('p').remove();
+    $result6_1.append($('<p>').html('START!'));
     
     //1つ目のPromiseオブジェクト
     var promise1 = new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result5_1.append($('<p>').html('promise1: waiting 2 sec'));
+            $result6_1.append($('<p>').html('promise1: waiting 2 sec'));
             console.log('promise1: waiting 2 sec');
             resolve('promise1');
         }, 2000);
@@ -221,7 +227,7 @@ $('#do-section5-code1-button').click(function(){
     //2つ目のPromiseオブジェクト
     var promise2 = new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result5_1.append($('<p>').html('promise2: waiting 4 sec'));
+            $result6_1.append($('<p>').html('promise2: waiting 4 sec'));
             console.log('promise2: waiting 4 sec');
             resolve('promise2');
         }, 4000);
@@ -230,7 +236,7 @@ $('#do-section5-code1-button').click(function(){
     //3つ目のPromiseオブジェクト
     var promise3 = new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result5_1.append($('<p>').html('promise3: waiting 6 sec'));
+            $result6_1.append($('<p>').html('promise3: waiting 6 sec'));
             console.log('promise3: waiting 6 sec');
             resolve('promise3');
         }, 6000);
@@ -238,28 +244,28 @@ $('#do-section5-code1-button').click(function(){
 
     //Promise.allで並列処理！
     Promise.all([promise1, promise2, promise3]).then(function(resp){
-        $result5_1.append($('<p>').html('"All" promise were finished just now!'));
-        $result5_1.append($('<p>').html('and responce is this: '));
-        $result5_1.append($('<p>').html('-------------'));
+        $result6_1.append($('<p>').html('"All" promise were finished just now!'));
+        $result6_1.append($('<p>').html('and responce is this: '));
+        $result6_1.append($('<p>').html('-------------'));
         for(var el of resp){
-            $result5_1.append($('<p>').html(el));
+            $result6_1.append($('<p>').html(el));
         }
-        $result5_1.append($('<p>').html('-------------'));
+        $result6_1.append($('<p>').html('-------------'));
     });
 
 });
 
 //code2: Promise.raceについての基本
-$('#do-section5-code2-button').click(function(){
+$('#do-section6-code2-button').click(function(){
 
-    var $result5_2 = $('#result-section5-code2');
-    $result5_2.children('p').remove();
-    $result5_2.append($('<p>').html('START!'));
+    var $result6_2 = $('#result-section6-code2');
+    $result6_2.children('p').remove();
+    $result6_2.append($('<p>').html('START!'));
     
     //1つ目のPromiseオブジェクト
     var promise1 = new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result5_2.append($('<p>').html('promise1: waiting 2 sec'));
+            $result6_2.append($('<p>').html('promise1: waiting 2 sec'));
             console.log('promise1: waiting 2 sec');
             resolve('promise1');
         }, 2000);
@@ -268,7 +274,7 @@ $('#do-section5-code2-button').click(function(){
     //2つ目のPromiseオブジェクト
     var promise2 = new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result5_2.append($('<p>').html('promise2: waiting 4 sec'));
+            $result6_2.append($('<p>').html('promise2: waiting 4 sec'));
             console.log('promise2: waiting 4 sec');
             resolve('promise2');
         }, 4000);
@@ -277,7 +283,7 @@ $('#do-section5-code2-button').click(function(){
     //3つ目のPromiseオブジェクト
     var promise3 = new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result5_2.append($('<p>').html('promise3: waiting 6 sec'));
+            $result6_2.append($('<p>').html('promise3: waiting 6 sec'));
             console.log('promise3: waiting 6 sec');
             resolve('promise3');
         }, 6000);
@@ -285,13 +291,13 @@ $('#do-section5-code2-button').click(function(){
 
     //Promise.raceで並列処理！
     Promise.race([promise1, promise2, promise3]).then(function(resp){
-        $result5_2.append($('<p>').html('"One" promise was finished just now!'));
-        $result5_2.append($('<p>').html('and responce is this: '));
-        $result5_2.append($('<p>').html('-------------'));
+        $result6_2.append($('<p>').html('"One" promise was finished just now!'));
+        $result6_2.append($('<p>').html('and responce is this: '));
+        $result6_2.append($('<p>').html('-------------'));
         for(var el of resp){
-            $result5_2.append($('<p>').html(el));
+            $result6_2.append($('<p>').html(el));
         }
-        $result5_2.append($('<p>').html('-------------'));
+        $result6_2.append($('<p>').html('-------------'));
     });
 
 });
@@ -300,7 +306,7 @@ $('#do-section5-code2-button').click(function(){
 /////////////////////////////////////////////////////////////
 
 
-//セクション６：再帰呼び出し
+//セクション7：再帰呼び出し
 
 
 
@@ -308,11 +314,11 @@ $('#do-section5-code2-button').click(function(){
 
 //再帰呼び出し用の関数。合計で2回だけ呼び出すようにしてます。
 function recursiveFunction(count){
-    var $result6_1 = $('#result-section6-code1');
+    var $result7_1 = $('#result-section7-code1');
     count = count || 0;
     return new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result6_1.append($('<p>').html('Now count is ' + count));
+            $result7_1.append($('<p>').html('Now count is ' + count));
 
             //ここが注意すべきポイント。ここのresolveは期待した動作をしない。
             if(count >= 1){
@@ -326,10 +332,10 @@ function recursiveFunction(count){
 }
 
 // 再帰呼び出し。できるだシンプルなコードで。
-$('#do-section6-code1-button').click(function(){
-    var $result6_1 = $('#result-section6-code1');
-    $result6_1.children('p').remove();
-    $result6_1.append($('<p>').html('START!'));
+$('#do-section7-code1-button').click(function(){
+    var $result7_1 = $('#result-section7-code1');
+    $result7_1.children('p').remove();
+    $result7_1.append($('<p>').html('START!'));
     recursiveFunction().then(function(message){
         //messageには、「complete!」という文字列が渡されることを期待している。しかしおそらくうまく動かない。
         $result6_1.append($('<p>').html('The responce is "' + message + '".'));
@@ -346,11 +352,11 @@ $('#do-section6-code1-button').click(function(){
 
 //修正した再帰呼び出しの関数を定義
 function recursiveFunctionNeo(count){
-    var $result6_2 = $('#result-section6-code2');
+    var $result7_2 = $('#result-section6-code2');
     count = count || 0;
     return new Promise(function(resolve, reject){
         setTimeout(function(){
-            $result6_2.append($('<p>').html('Now count is ' + count));
+            $result7_2.append($('<p>').html('Now count is ' + count));
             resolve(count);
         }, 2000);    
     })
@@ -365,19 +371,19 @@ function recursiveFunctionNeo(count){
 }
 
 // 再帰呼び出し。こんどこそ上手くいくコードにしましょう！
-$('#do-section6-code2-button').click(function(){
-    var $result6_2 = $('#result-section6-code2');
-    $result6_2.children('p').remove();
-    $result6_2.append($('<p>').html('START!'));
+$('#do-section7-code2-button').click(function(){
+    var $result7_2 = $('#result-section7-code2');
+    $result7_2.children('p').remove();
+    $result7_2.append($('<p>').html('START!'));
     recursiveFunctionNeo().then(function(message){
         //messageには、「complete!」という文字列が渡されることを期待している。       
-        $result6_2.append($('<p>').html('The responce is "' + message + '".'));
+        $result7_2.append($('<p>').html('The responce is "' + message + '".'));
     });
 });
 
 //code2をページに表示するクリックイベント
-$('#open-section6-code2').click(function(){
-    $('#answer6-2').show();
+$('#open-section7-code2').click(function(){
+    $('#answer7-2').show();
 });
 
 
