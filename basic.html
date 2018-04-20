@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>Basic編</title>
+        <link rel="stylesheet" type="text/css" href="./css/promise.css">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <br />
+        <div id="section1">
+            <h2 class="title">セクション１：非同期処理でPromiseを使わないと.....?</h2>
+            <p>以下に表示されるように、期待した処理順と逆になってしまう。。。困りますね(>_<)</p>
+            <div id="section1-code1" class="js-code">
+                <span class="box-title">セクション１のコード</span>
+                <pre>
+                    var $result1_1 = $('#result-section1-code1');
+                    $result1_1.children('p').remove();
+                    $result1_1.append($('&lt;p&gt;').html('START!'));
+                    setTimeout(function(){
+                        //2秒（＝2000ミリ秒）待ってからここの処理を実行する
+                        //kintoneだと、別アプリから大量のレコードやアプリ情報などを取得したりする処理を想定してもらってOK
+                        $result1_1.append($('&lt;p&gt;').html('setTimeout was finished just now!'));                            
+                    }, 2000);
+                    $result1_1.append($('&lt;p&gt;').html('After setTimeout was finished.'));   
+                </pre>
+            </div>
+            <button type="button" class="btn btn-primary" id="do-section1-code1-button">セクション1のコード実行！</button>
+            <div id="result-section1-code1" class="do-box">
+                <span class="box-title">セクション１の実行結果</span>
+            </div>
+        </div>
+        <br />
+        <div id="section2">
+            <h2 class="title">セクション2：native Promiseを使ってみよう！</h2>
+            <p>ここでは、native Promiseを使って、非同期処理を待ってから処理を実行してみましょう！</p>
+            <div class="card def-box">
+                <div class="card-header box-title">
+                    そもそもPromiseとは？
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">非同期処理の状態を監視してくれるオブジェクト！！</h5>
+                    <p>
+                        Promiseオブジェクトの中に記述した非同期処理（コードの記述した順序通りに処理が実行されない処理）の状態を監視してくれます。<br />
+                        そして、その処理が終了して、「ここのPromiseは完了状態です！」と宣言する関数がresolveなのである！<br />
+                        反対に、「ここのPromiseの処理は失敗しました！」と宣言するのが関数rejectの役割です。
+                    </p>
+                </div>
+            </div>
+            <p>というわけで、実際に以下のように処理の順序がPromiseで制御されていることをご確認してください♪</p>
+            <div id="section2-code1" class="js-code">
+                    <span class="box-title">セクション２のコード</span>
+                    <pre>
+                            var $result2_1 = $('#result-section2-code1');
+                            $result2_1.children('p').remove();
+                            $result2_1.append($('&lt;p&gt;').html('START!'));
+                            //Promiseオブジェクトの中に、監視させたい非同期処理を記述します
+                            new Promise(function(resolve, reject){
+                                setTimeout(function(){
+                                    //2秒（＝2000ミリ秒）待ってからここの処理を実行する
+                                    //kintoneだと、別アプリから大量のレコードやアプリ情報などを取得したりする処理を想定してもらってOK
+                                    $result2_1.append($('&lt;p&gt;').html('setTimeout was finished just now!'));
+                                    //「このPromiseは処理完了状態になりましたよ！」と宣言するものが、resolve関数なのだ！！
+                                    resolve('setTimeout of section2');            
+                                }, 2000);
+                            })
+                            //resolveが呼び出されると、thenの中に記述するコールバック関数が呼び出される
+                            .then(function(message){
+                                //resolveの引数をここで受け取って使うことが出来る
+                                $result2_1.append($('&lt;p&gt;').html('After ' + message + ' was finished.'));
+                            });
+                    </pre>
+                </div>
+            <button type="button" class="btn btn-primary" id="do-section2-code1-button">セクション２の処理を実行！</button>
+            <div id="result-section2-code1" class="do-box">
+                <span class="box-title">セクション２の実行結果</span>
+            </div>
+        </div>
+        <br />
+        <div id="section3">
+            <h2 class="title">セクション３：thenの戻り値について</h2>
+            <p>実は、<span class="important">thenの戻り値はPromiseオブジェクト</span>になります。それにより、thenをいくつもチェーンすることが出来ます。</p>
+            <p>ここではそのことを確認していきましょう。</p>
+
+            <p>まずは、thenのコールバックの中で、ふつうのデータ型を返す処理を実行し、それがPromiseオブジェクトでラップされていることを確認してみます。</p>
+            <div id="section3-code1" class="js-code">
+                <span class="box-title">セクション３のコード１</span>
+                <pre>
+                    var afterThenObject = new Promise(function(resolve, reject){                            
+                        //なにかしらの非同期処理が行われたことを想定
+                        //ここのPromiseが完了状態になったことを宣言
+                        resolve("HAHAHAHA");
+                    })
+                    .then(function(message){                
+                        //resolveの引数を受け取れることは前のセクションで学習済み
+                        //ここではシンプルに、受け取った値を返すだけにする。
+                        return message;                    
+                    });
+                    //上の変数afterThenPromiseの実体が何なのかをここでは確認したい。
+                    console.log(afterThenObject);  
+                </pre>
+            </div>
+            <p>
+                上のafterThenObjectはいったいどんなオブジェクトなのだろうか？<br />
+                最後にthenの中で、ふつうの文字列を返しているので、そのまま文字列が返ってくると思ってしまいますよね。<br />
+                ところが、実行結果を見ると、afterThenPromiseの実体は、Promiseオブジェクトであることが分かります！
+            </p>
+            <button type="button" class="btn btn-primary" id="do-section3-code1-button">セクション３コード１の処理を実行！</button>
+            <div id="result-section3-code1" class="do-box">
+                <span class="box-title">セクション3コード1の実行結果</span>
+                <pre>
+                        Promise {&lt;pending&gt;}
+                                __proto__: Promise
+                                [[PromiseStatus]]: "resolved"
+                                [[PromiseValue]]: "HAHAHAHA"
+                </pre>
+            </div>
+            <p>つまり、thenを立て続けに書くことで、いくつもの非同期処理を<span class="important">逐次的に</span>動作させることが出来るようになります！</p>
+            <p>以下では、そのことを簡単な例で体感してみましょう！</p>
+            <div id="section3-code2" class="js-code">
+                <span class="box-title">セクション３のコード2</span>
+                <pre>
+                    var $result3_2 = $('#result-section3-code2');
+                    $result3_2.children('p').remove();
+                    $result3_2.append($('&lt;p&gt;').html('START!'));
+                    new Promise(function(resolve, reject){
+                        //非同期処理
+                        setTimeout(function(){
+                            $result3_2.append($('&lt;p&gt;').html('setTimeout was finished just now!'));
+                            resolve('HAHAHAHAHAHA');
+                        }, 2000);
+                    })
+                    //1つ目のthen
+                    .then(function(message1){
+                        $result3_2.append($('&lt;p&gt;').html('First then was done just now. The message is "' + message1 + '"'));
+                        return message1 + message1;
+                    })
+                    //2つ目のthen
+                    .then(function(message2){
+                        $result3_2.append($('&lt;p&gt;').html('Second then was done just now. The message is "' + message2+ '"'));
+                        return message2;        
+                    });
+                </pre>
+            </div>
+            <button type="button" class="btn btn-primary" id="do-section3-code2-button">セクション３コード2の処理を実行！</button>
+            <div id="result-section3-code2" class="do-box">
+                <span class="box-title">セクション3コード2の実行結果</span>
+            </div>
+        </div>
+        <br />
+        <div id="section4">
+            <h2 class="title">セクション４：関数を使ってより実戦的に</h2>
+            <p>
+                これまでは、生のPromiseオブジェクトを記述していましたが、kintoneのサンプルコードなんかはもちろん、<br />
+                関数を用いて一連の処理に名前をつけて管理してあるコードが多いです。また、そのようなコードの方が圧倒的に読みやすい！そんなコードを書いていきたいものです。<br />
+                というわけで、ここでは関数を用いてより実戦的なコードを書いてみたいと思います。<br />
+                さらに、復習もかねてたくさんthenをチェーンさせてみようと思うので、javascriptのコードを見て、最後に表示されるのはどんなものか考えてみるといいかもしれませんね♪
+            </p>
+            <div id="section4-code1" class="js-code">
+                <span class="box-title">セクション4のコード１</span>
+                <pre>
+                    var $result4_1 = $('#result-section4-code1');
+                    $result4_1.append($('&lt;p&gt;').html('START!')); 
+                    //関数実行
+                    firstPromiseFunction().then(secondPromiseFunction)
+                    .then(function(message){
+                        $result4_1.append($('&lt;p&gt;').html('The last message is "' + message + '"'));
+                    });
+
+                    //一つ目の関数
+                    function firstPromiseFunction(){
+                        //非同期処理を監視するPromiseオブジェクトを返す関数！！
+                        return new Promise(function(resolve, reject){
+                            setTimeout(function(){
+                                var $result4_1 = $('#result-section4-code1');
+                                var message1 = 'HAHAHAHA';
+                                $result4_1.append($('&lt;p&gt;').html('firstPromiseFunction was done just now! send a message "HAHAHAHA" to secondPromiseFunction.'));
+                                resolve(message1);
+                            }, 2000);
+                        });
+                    }
+
+                    //2つ目の関数。関数の中でthenを使ってみる。
+                    function secondPromiseFunction(message1){
+                        return new Promise(function(resolve, reject){
+                            setTimeout(function(){
+                                var $result4_1 = $('#result-section4-code1');
+                                var message2 = message1 + message1 + '!!!!';
+                                $result4_1.append($('&lt;p&gt;').html('secondPromiseFunction was done just now! send a message "' + message2 + '" to after then.'));
+                                resolve(message2);
+                            }, 2000);
+                        })
+                        .then(function(message2){
+                            return new Promise(function(resolve, reject){
+                                setTimeout(function(){
+                                    var $result4_1 = $('#result-section4-code1');
+                                    var message3 = message2 + message2 + '??????';
+                                    $result4_1.append($('&lt;p&gt;').html('The "then" of secondPromiseFunction was done just now! send  a message "' + message3 + '" to after "then"'));
+                                    resolve(message3)
+                                }, 2000);
+                            });
+                        });
+                    }
+                </pre>
+            </div>
+            <button type="button" class="btn btn-primary" id="do-section4-code1-button">セクション4コード1の処理を実行！</button>
+            <div id="result-section4-code1" class="do-box">
+                <span class="box-title">セクション4コード1の実行結果</span>
+            </div>
+        </div>
+        <br />
+        <div id="section5">
+            <h2 class="title">セクション5：Promise.all, Promise.raceを用いた並列処理</h2>
+            <p>
+                ここまでは、非同期処理が終わるのを「待ってから」次の処理を実行する、いわゆる逐次処理を記述してきました。<br />
+                しかし、場合によってはいくつかの非同期処理を同時並行して処理させたい場合があると思います。きっと。<br />
+                たとえば、アプリ一覧をkintone.api('/k/v1/apps')で集めながら、別のアプリのフィールド情報を取得したり。<br />
+                完全に独立した処理は並列で処理したいですよね。。。<br />
+                そんなときに、Promise.all, Promise.raceが便利なので、ここではその基本的な使い方を学んでいきます！
+            </p>
+            <div class="card def-box">
+                <div class="card-header box-title">
+                    Promise.all, Promise.raceの使い方
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Promise.all([Promiseオブジェクトたちの配列]).then(処理)</h5>
+                    <p>
+                        引数として、すべての要素がPromiseオブジェクトの配列を渡します。<br />
+                        渡したPromiseが監視している非同期処理がすべて並列で処理され、すべてのPromiseでresolveが呼び出されたのちに、thenの処理が実行される。
+                    </p>
+                    <h5 class="card-title">Promise.race([Promiseオブジェクトたちの配列]).then(処理)</h5>
+                    <p>
+                        Promise.allとほとんど同じです。<br />
+                        大きな違いは、Promise.raceは、引数のPromiseオブジェクトたちのどれか一つでもresolveを呼び出したら、thenの処理を実行することです。
+                    </p>
+                </div>
+            </div>
+            <p>
+                以下では、シンプルな例を通して、Promise.all, Promise.raceを感じてみましょう！
+            </p>
+            <div id="section5-code1" class="js-code">
+                <span class="box-title">セクション5のコード1~Promise.all~</span>
+                <pre>
+                    var $result5_1 = $('#result-section5-code1');
+                    $result5_1.children('p').remove();
+                    $result5_1.append($('&lt;p&gt;').html('START!'));
+                    
+                    //1つ目のPromiseオブジェクト
+                    var promise1 = new Promise(function(resolve, reject){
+                        setTimeout(function(){
+                            $result5_1.append($('&lt;p&gt;').html('promise1: waiting 2 sec'));
+                            resolve('promise1');
+                        }, 2000);
+                    });
+                    
+                    //2つ目のPromiseオブジェクト
+                    var promise2 = new Promise(function(resolve, reject){
+                        setTimeout(function(){
+                            $result5_1.append($('&lt;p&gt;').html('promise2: waiting 4 sec'));
+                            resolve('promise2');
+                        }, 4000);
+                    });
+                
+                    //3つ目のPromiseオブジェクト
+                    var promise3 = new Promise(function(resolve, reject){
+                        setTimeout(function(){
+                            $result5_1.append($('&lt;p&gt;').html('promise3: waiting 6 sec'));
+                            resolve('promise3');
+                        }, 6000);
+                    });
+                
+                    //Promise.allで並列処理！
+                    Promise.all([promise1, promise2, promise3]).then(function(resp){
+                        $result5_1.append($('&lt;p&gt;').html('"All" promise were finished just now!'));
+                        $result5_1.append($('&lt;p&gt;').html('and responce is this: '));
+                        $result5_1.append($('&lt;p&gt;').html('-------------'));
+                        for(var el of resp){
+                            $result5_1.append($('&lt;p&gt;').html(el));
+                        }
+                        $result5_1.append($('&lt;p&gt;').html('-------------'));
+                    });
+                </pre>
+            </div>
+            <button type="button" class="btn btn-primary" id="do-section5-code1-button">セクション5のコード1実行！</button>
+            <div id="result-section5-code1" class="do-box">
+                <span class="box-title">セクション5のコード1実行結果</span>
+            </div>
+            <br />
+            <div id="section5-code2" class="js-code">
+                <span class="box-title">セクション5のコード2~Promise.race~</span>
+                <pre>
+                    //promise1, promise2, promise3の定義は、コード1と全く同じにしてあります。
+                    //Promise.raceで並列処理！
+                    Promise.race([promise1, promise2, promise3]).then(function(resp){
+                        $result5_2.append($('&lt;p&gt;').html('"One" promise was finished just now!'));
+                        $result5_2.append($('&lt;p&gt;').html('and responce is this: '));
+                        $result5_2.append($('&lt;p&gt;').html('-------------'));
+                        for(var el of resp){
+                            $result5_2.append($('&lt;p&gt;').html(el));
+                        }
+                        $result5_2.append($('&lt;p&gt;').html('-------------'));
+                    });
+                </pre>
+            </div>
+            <button type="button" class="btn btn-primary" id="do-section5-code2-button">セクション5のコード2実行！</button>
+            <div id="result-section5-code2" class="do-box">
+                <span class="box-title">セクション5のコード2実行結果</span>
+            </div>
+        </div>
+        <br />
+        <div id="section6">
+            <h2 class="title">セクション6（応用）：再帰呼び出し</h2>
+            <p>
+                再帰呼び出しを絡めた非同期処理を例にして、少し応用的なことを考えてみたいと思います。<br />
+                そもそもなぜこのセクションを入れたのかというと、僕がここ最近取り組んでいたkintoneプラグイン開発で詰まってしまったのがこのあたりだったからです。
+            </p>
+            <div id="section6-code1" class="js-code">
+                <span class="box-title">セクション6のコード1</span>
+                <pre>
+                    //再帰呼び出し用の関数。合計で2回だけ呼び出すようにしてます。
+                    function recursiveFunction(count){
+                        var $result6_1 = $('#result-section6-code1');
+                        count = count || 0;
+                        return new Promise(function(resolve, reject){
+                            setTimeout(function(){
+                                $result6_1.append($('&lt;p&gt;').html('Now count is ' + count));
+                    
+                                //ここが注意すべきポイント。ここのresolveは期待した動作をしない。
+                                if(count >= 1){
+                                    resolve('complete!');
+                                }else{
+                                    count += 1;
+                                    recursiveFunction(count);
+                                }
+                            }, 2000);
+                        });
+                    }
+                    
+                    // 再帰呼び出し。できるだシンプルなコードで。
+                    $('#do-section6-code1-button').click(function(){
+                        var $result6_1 = $('#result-section6-code1');
+                        $result6_1.children('p').remove();
+                        $result6_1.append($('&lt;p&gt;').html('START!'));
+                        recursiveFunction().then(function(message){
+                            //messageには、「complete!」という文字列が渡されることを期待している。しかしおそらくうまく動かない。
+                            $result6_1.append($('&lt;p&gt;').html('The responce is "' + message + '".'));
+                        });
+                    });
+                </pre>
+            </div>
+            <button type="button" class="btn btn-primary" id="do-section6-code1-button">セクション6のコード1実行！</button>
+            <div id="result-section6-code1" class="do-box">
+                <span class="box-title">セクション6のコード1実行結果</span>
+            </div>
+            <br />
+            <p>
+                このように、上記のような記述では、うまく再帰呼び出しを絡めたPromiseを使うことはできません。<br/ >
+                では、どのように記述すれば解決できるでしょうか？考えてみてください♪（ここまでの知識で解決できます）
+            </p>
+            <button type="button" class="btn btn-warning" id="open-section6-code2">セクション6のコード2を見る！</button>
+            <div id="section6-code2" class="js-code">
+                <span class="box-title">セクション6のコード2</span>
+                <pre id="answer6-2" class="answer">
+                    //修正した再帰呼び出しの関数を定義
+                    function recursiveFunctionNeo(count){
+                        var $result6_2 = $('#result-section6-code2');
+                        count = count || 0;
+                        return new Promise(function(resolve, reject){
+                            setTimeout(function(){
+                                $result6_2.append($('&lt;p&gt;').html('Now count is ' + count));
+                                resolve(count);
+                            }, 2000);    
+                        })
+                        .then(function(count){
+                            if(count === 0){
+                                count += 1;
+                                return recursiveFunctionNeo(count);
+                            }else{
+                                return 'complete!';
+                            }
+                        });
+                    }
+                    
+                    // 再帰呼び出し。こんどこそ上手くいくコードにしましょう！
+                    $('#do-section6-code2-button').click(function(){
+                        var $result6_2 = $('#result-section6-code2');
+                        $result6_2.children('p').remove();
+                        $result6_2.append($('&lt;p&gt;').html('START!'));
+                        recursiveFunctionNeo().then(function(message){
+                            //messageには、「complete!」という文字列が渡されることを期待している。       
+                            $result6_2.append($('&lt;p&gt;').html('The responce is "' + message + '".'));
+                        });
+                    });
+                </pre>
+            </div>
+            <button type="button" class="btn btn-primary" id="do-section6-code2-button">セクション6のコード2実行！</button>
+            <div id="result-section6-code2" class="do-box">
+                <span class="box-title">セクション6のコード2実行結果</span>
+            </div>
+            <br />
+            <p>
+                それでは、なぜ先ほどのコード１が期待した動作をしなかったのか確認しましょう。
+            </p>
+            <br />
+            <button type="button" class="btn btn-warning" id="opne-all-answer">問題の解説を見る</button>
+            <div id="all-answer" class="">
+                <p>
+                    結論からいうと、「Promiseの入れ子構造が作られてしまっている」ことが原因です。<br />
+                    コード１でthenが見ているPromiseオブジェクトは、親のPromiseなのですが、recursiveFunctionで最後にresolveが呼び出されるのは <br />
+                    子のPromiseなので、親Promiseは依然としてpending状態のままなのです。
+                </p>
+                <br />
+                <p>
+                    このことはコンソールで確認できます。（recursiveFunctionをそのまま使うとDOM操作が入って気持ち悪いから、DOM操作を除いたものをあとで定義してコンソールで確認してやろうか）
+                </p>
+                <br />
+                <p>
+                    対してコード２では、new Promiseの後に続けて記述したthenの中でrecursiveFunctionをreturnしています。<br />
+                    ここでポイントになるのは、先ほど学んだように、<span class="important">thenの戻り値がPromiseになること</span>です。それによって、Promiseのネスト構造ができるのではなく、<br />
+                    Promiseがthenによって随時更新されていく（チェーンされていくイメージ）アルゴリズムになっているのです。<br />
+                    また、recursiveFunctionは最後に'complete!'という文字列をreturnしますが、それもやはりthenによってPromiseにラップされるので、関数呼び出しに続けてthenを呼び出してその戻り値を受け取ることが出来るのです。
+                </p>
+                <br />
+                <p>
+                    このことが上手く利用されているコードに、kintone.apiリクエストのレコード数やアプリ数の上限を突破するよう工夫された関数たちです。<br />
+                    （ここにコード貼り付けておこう）
+                </p>
+                <div id="section6-code3" class="js-code">
+                    <span class="box-title">kintone.apiを利用した再帰呼び出しの具体例</span>
+                    <pre>
+                        //レコードを取得する関数
+                        function fetchQueryRecords(offset, opt_records){
+
+                            offset = offset || 0;
+                            var allRecords = opt_records || [];
+
+                            var params = {
+                                'app': appId, //なにか参照先のアプリIDとします。
+                                'offset': offset
+                            };
+                            
+                            //ここがポイント！
+                            return kintone.api(kintone.api.url('/k/v1/records', true), 'GET', params).then(function(records){
+
+                                allRecords.concat(records);
+
+                                if(records.length === 100){ //上限値に達したときに再帰呼び出し
+                                    return fetchQueryRecords(offset + records.length, allRecords);
+                                }else{
+                                    return allRecords;
+                                }
+
+                            });
+
+                        }
+                    </pre>
+                </div>
+                <p>
+                    ここでは、kintone.apiが、<span class="important">コールバック関数を省略したときはkintone.Promiseを返す</span>ことをうまく利用しています。
+                </p>
+            </div>
+        </div>
+        <script src="./js/basic.js"></script>
+    </body>
+</html>
